@@ -4,6 +4,10 @@ from flask_cors import CORS, cross_origin
 import joblib
 import pandas as pd
 import random
+import os
+from dotenv import load_dotenv
+load_dotenv()
+PORT = os.getenv("PORT")
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -43,11 +47,9 @@ def generate_data():
 @cross_origin()
 def predict():
 
-    found_user = generate_data()
-    print("found_user",found_user)
-
+    random_user_data = generate_data()
     #https://towardsdatascience.com/a-flask-api-for-serving-scikit-learn-models-c8bcdaa41daa
-    query = pd.get_dummies(pd.DataFrame(found_user, index=[0]))
+    query = pd.get_dummies(pd.DataFrame(random_user_data, index=[0]))
     query = query.reindex(columns=model_columns, fill_value=0)
 
     #return prediction as probability in percent
@@ -57,5 +59,4 @@ def predict():
 if __name__ == '__main__':
      model = joblib.load('model/model.pkl')
      model_columns = joblib.load('model/model_columns.pkl')
-     generate_data()
-     app.run(port=3001)
+     app.run(port=PORT)

@@ -163,7 +163,7 @@ if __name__ == '__main__':
      model_columns = joblib.load('model/model_columns.pkl')
      app.run()
 ```
-Here we use `joblib` to load our model and the columns that we used for training. In the `predict()` function, we'll geneate a random user, create a new DataFrame from the returned data, using the saved coloumns names, to create the dataFrame
+Here we use `joblib` to load our model and the columns that we used for training. In the `predict()` function, we'll generate a random user, create a new DataFrame from the returned data, using the saved columns names, to create the dataFrame.
 ```Python
 def predict():
     random_user_data = generate_data()
@@ -210,6 +210,40 @@ def generate_data():
         }
     return random_data
 ```  
-For InternetService, Contract and PaymentMethod, we hardcode the possible values that can used for each, and choose a random value. For the other features, if it only contained a Yes or No value in the traning set, we'll assign 1 or 0, randomly, For the features that used Yes, No and some other string, we'll use 1, 0 and -1, respectively.
+For InternetService, Contract and PaymentMethod, we hardcode the possible values that can used for each, and choose a random value. For the other features, if it only contained a Yes or No value in the training set, we'll assign `1` or `0`, randomly, For the features that used `Yes`, `No` and some other string, we'll use `1`, `0` and `-1`, respectively.
 
-Lets n 
+Next, lets go over our predict function, which is called whenever there is a request to `/predict`
+```python
+@app.route('/predict', methods=['GET'])
+@cross_origin()
+def predict():
+
+    random_user_data = generate_data()
+    query = pd.get_dummies(pd.DataFrame(random_user_data, index=[0]))
+    query = query.reindex(columns=model_columns, fill_value=0)
+
+    #return prediction as probability in percent
+    prediction = round(model.predict_proba(query)[:,1][0], 2)* 100
+    return jsonify({'churn': prediction})
+```
+
+Here, we generate data for a random user, then create a Dataframe that looks just the Dataframe we used for training our model. This will have the same columns but only have 1 row of dataset
+Finally, we'll make call `predict_proba` on the model to return a vector for the likelihood of the user churning.
+`[[0.79329917 0.20670083]]`
+we'll take the last item in the vector, since this is the value of the user churning, round to 2 decimal places and convert to a percentage
+`prediction = round(model.predict_proba(query)[:,1][0], 2)* 100`
+This will return `21.0`, which is the percentage of the user churning.
+Finally, we'll return this value as JSON in a `churn` object.
+
+Next, we'll deploy our model server using ngrok. If you are not familiar with Ngrok, please refer to our [Ngrok tutorial](https://www.nexmo.com/blog/2017/07/04/local-development-nexmo-ngrok-tunnel-dr) before proceeding.
+Navigate to the model_server folder and install the following packages
+```bash
+pip install flask pandas
+```
+Next, we'll run
+
+
+
+# Web Application
+In our last piece, we can now bring it all together.
+The web app is based off of recent blog post on [how to build an on-page live chat app](https://www.nexmo.com/blog/2019/10/18/how-to-build-an-on-page-live-chat-dr). We will be adding our churn prediction functionality on top of this application.
