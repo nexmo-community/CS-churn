@@ -1,4 +1,4 @@
-# Building a user churn prediction model with the Conversation API
+# Building a User Churn Prediction Model With the Conversation API
 
 This sample application will go over how to integrate a machine learning model that is able to predict user churn.  
 
@@ -34,7 +34,7 @@ python server.py
 
 <!-- change "github-repo" at the end of the link to be the name of your repo, this helps us understand which projects are driving signups so we can do more stuff that developers love -->
 
-If you're new to Nexmo, you can [sign up for a Nexmo account](https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=https://github.com/nexmo-community/cloudinary-conversation-API-collab) and get some free credit to get you started.
+If you're new to Nexmo, you can [sign up for a Nexmo account](https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=https://github.com/nexmo-community/CS-churn) and get some free credit to get you started.
 
 <!-- add other sections as appropriate for your repo type -->
 
