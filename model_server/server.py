@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS, cross_origin
 
 import joblib
 import pandas as pd
@@ -44,7 +43,6 @@ def generate_data():
     return random_data
 
 @app.route('/predict', methods=['GET'])
-@cross_origin()
 def predict():
 
     random_user_data = generate_data()
@@ -54,6 +52,7 @@ def predict():
 
     #return prediction as probability in percent
     prediction = round(model.predict_proba(query)[:,1][0], 2)* 100
+    print("prediction",prediction)
     return jsonify({'churn': prediction})
 
 if __name__ == '__main__':

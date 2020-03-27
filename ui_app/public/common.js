@@ -70,7 +70,12 @@ let messageId = 0;
 function getChurnForUser(conversation) {
   //Send custom event to agent
   if (window.location.pathname == "/") {
-    fetch("https://da18b765.ngrok.io/predict")
+    fetch("http://127.0.0.1:3001/predict",{
+    mode: 'cors',
+    headers: {
+      'Access-Control-Allow-Origin':'*'
+    }
+  })
     .then(response => {return response.json()})
     .then(json => {
       conversation.sendCustomEvent({ type: 'churn-prediction', body: json}).then(() => {
