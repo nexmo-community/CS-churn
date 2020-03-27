@@ -56,8 +56,8 @@ function setupListeners() {
     const inputText = textbox.value;
 
     activeConversation.sendText(inputText);
-    
-  
+
+
     textbox.value = '';
   }, false);
 }
@@ -67,7 +67,7 @@ let messageId = 0;
 function getChurnForUser(conversation) {
   //Send custom event to agent
   if (window.location.pathname == "/agent") {
-    fetch("https://b95e4401.ngrok.io/predict")
+    fetch("http://127.0.0.1:3001/predict")
     .then(response => {return response.json()})
     .then(json => {
       conversation.sendCustomEvent({ type: 'churn-prediction', body: json}).then(() => {
@@ -77,9 +77,7 @@ function getChurnForUser(conversation) {
       });
     })
     .catch(error => console.log('error', error));
-   
   }
-  
 }
 
 function appendMessage(message, sender, appendAfter) {
@@ -104,17 +102,4 @@ function appendMessage(message, sender, appendAfter) {
   });
 
   return messageDiv.dataset.messageId; /* Return this message id so that a reply can be posted to it later */
-}
-
-function getChurn() {
-  var requestOptions = {
-    method: 'GET',
-    redirect: 'follow'
-  };
-  
-  fetch("https://b95e4401.ngrok.io/predict", requestOptions)
-    .then(response => response.text())
-    .then(result => {console.log(result); return result})
-    .catch(error => console.log('error', error));
-
 }
