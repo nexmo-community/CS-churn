@@ -1,5 +1,6 @@
 let activeConversation;
 let application;
+let didSendChurnPrediction = false
 
 function setupConversation(apiPath) {
   fetch(apiPath) /* To generate the JWT for the agent */
@@ -21,7 +22,6 @@ function setupConversation(apiPath) {
           console.log('*** Retrieved conversations', conversation);
           activeConversation = conversation;
           setupListeners();
-          getChurnForUser(activeConversation)
         })
         .catch(console.error);
     });
@@ -56,7 +56,10 @@ function setupListeners() {
     const inputText = textbox.value;
 
     activeConversation.sendText(inputText);
-
+    if (!didSendChurnPrediction) {
+      getChurnForUser(activeConversation)
+      didSendChurnPrediction = true
+    }
 
     textbox.value = '';
   }, false);
@@ -66,8 +69,8 @@ let messageId = 0;
 
 function getChurnForUser(conversation) {
   //Send custom event to agent
-  if (window.location.pathname == "/agent") {
-    fetch("http://127.0.0.1:3001/predict")
+  if (window.location.pathname == "/") {
+    fetch("https://da18b765.ngrok.io/predict")
     .then(response => {return response.json()})
     .then(json => {
       conversation.sendCustomEvent({ type: 'churn-prediction', body: json}).then(() => {
