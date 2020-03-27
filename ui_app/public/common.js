@@ -39,7 +39,7 @@ function setupListeners() {
     );
   });
 
-  activeConversation.on('my-event', (sender, message) => {
+  activeConversation.on('churn-prediction', (sender, message) => {
     if (window.location.pathname == "/agent") {
       console.log("message", message)
       document.getElementById("churn_text").innerHTML = "Likely hood of current customer churn: " +  message["body"]["churn"] + "%"
@@ -70,7 +70,7 @@ function getChurnForUser(conversation) {
     fetch("https://b95e4401.ngrok.io/predict")
     .then(response => {return response.json()})
     .then(json => {
-      conversation.sendCustomEvent({ type: 'my-event', body: json}).then(() => {
+      conversation.sendCustomEvent({ type: 'churn-prediction', body: json}).then(() => {
         console.log('custom event was sent');
       }).catch((error)=>{
         console.log('error sending the custom event', error);
