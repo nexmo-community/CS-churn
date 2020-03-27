@@ -11,7 +11,7 @@ We’ve built a simple demo application that simulates a conversation between a 
 ![](images/Churn Demo.mp4)
 
 # Overview
-In our demo, we have 2 user personas, a customer and an agent. For this example, we’ll assume the company is a TV service provider, and the customer has a question about their service. We also assume that this customer has been with the company for awhile, and we have data to support this.
+In our demo, we have 2 user personas, a customer and an agent. For this example, we’ll assume the company is a TV service provider, and the customer has a question about their service. We also assume that this customer has been with the company for a while, and we have data to support this.
 In our example, we have some data about the user. This would be how long in months that the customer has used the service, what their billing issue, what services they have and so on.
 
 For our demo, when the customer interacts with the agent, we show the likelihood of the user churning on the agent’s screen, as soon as they begin to interact. This could be helpful to the agent before starting the conversation, so that more attention could be given to the customer, depending on the likelihood of churn.
@@ -106,7 +106,7 @@ Here, we create a list of these features that we want to convert to categorical 
 Lets again view the first 10 rows to double check our work. Since the dataframe is now 41 features, we'll link to the cell [here](https://colab.research.google.com/drive/1e7uDkEkHyY-r6UKJh0ZvHBenhGOVjdCO#scrollTo=V3jFDzt6C9qa&line=1&uniqifier=1).
 
 Looks like all the columns are numeric. Let's build our model.
-To build our model, we'll use another package called [scikit-learn](https://scikit-learn.org/stable/).Scikit-Learn has many built it functions to process and train a model with our data.
+To build our model, we'll use another package called [scikit-learn](https://scikit-learn.org/stable/).Scikit-Learn has many built in functions to process and train a model with our data.
 
 First, we need 2 matrices, `X` and `y`. `X` is a matrix that includes all of our features except for the feature that we are using to make predictions(`Churn`). `Y` is just the value of `Churn`, which is a `1` or `0`.
 ```python
@@ -139,7 +139,7 @@ model.predict(X_test)
 # Print the prediction accuracy
 print (metrics.accuracy_score(y_test, prediction_test))
 ````
-using `metrics.accuracy_score` we can print out our accuracy, 0.8135352579271179 which is ~89%. This is means that when our model is given data to make a prediction, its result is correct about 89% percent of the time. Note, this accuracy is just one of many metrics when [evaluating a model](https://scikit-learn.org/stable/modules/model_evaluation.html).
+using `metrics.accuracy_score` we can print out our accuracy, 0.8135352579271179 which is ~89%. This means that when our model is given data to make a prediction, its result is correct about 89% percent of the time. Note, this accuracy is just one of many metrics when [evaluating a model](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 Once we have our model, we'll need to save it in order to be used in our contact center app. To save we use the [`joblib` function dump()](https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html) to save our model.
 We will also need to save the names of the columns that we used for training. This will be used when we build our server to make predictions.
@@ -222,7 +222,7 @@ def generate_data():
 ```  
 For `InternetService`, `Contract` and `PaymentMethod`, we hard code the possible values that can be used for each, and choose a random value. For the other features, if it only contained a `Yes` or `No` value in the training set, we'll assign `1` or `0`, randomly, For the features that used `Yes`, `No` and some other string, we'll use `1`, `0` and `-1`, respectively.
 
-Next, lets go over our predict function, which is called when there is a request to the`/predict` endpoint.
+Next, let's go over our predict function, which is called when there is a request to the`/predict` endpoint.
 ```python
 @app.route('/predict', methods=['GET'])
 @cross_origin()
@@ -300,4 +300,4 @@ activeConversation.on('churn-prediction', (sender, message) => {
 ```
 When the `churn-prediction` event fires, we return send the churn prediction in the `message` property and update the `innerHTML` text with the churn.
 
-Now, whenever we have a new user connect with our agent, we'll be able to see what's their likely of no longer needed our companies services. If the possibly of churn is high, maybe, we should be a little extra nice to them :)
+Now, whenever we have a new user connect with our agent, we'll be able to see what's likely to no longer need our company's services. If the possibility of churn is high, maybe, we should be a little extra nice to them :)
